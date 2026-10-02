@@ -1,4 +1,4 @@
-#WEX - (WINE EXECUTABLE)
+# WEX - (WINE EXECUTABLE)
 
 Software Purpose: Easy way to launch .exe files/games for new Linux Users who just switched from Windows without going through any hassle of configuration. 
 Plug And Play Easy to use for everyone, just one simple download.
