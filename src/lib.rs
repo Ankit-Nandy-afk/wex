@@ -1,6 +1,7 @@
 use std::env;
 use std::ffi::OsString;
-use std::fs;
+//use std::fs;
+use std::path::Path;
 use std::path::PathBuf;
 
 fn xdg_path_manager() -> Option<PathBuf> {
@@ -20,7 +21,7 @@ fn xdg_path_manager() -> Option<PathBuf> {
         }
         None => None,
     };
-    return xdg_path;
+    xdg_path
 }
 
 fn homelocalshare_path_manager() -> Option<PathBuf> {
@@ -40,14 +41,33 @@ fn homelocalshare_path_manager() -> Option<PathBuf> {
         }
         None => None,
     };
-    return home_path;
+    home_path
 }
 
 pub fn top_manager() -> Option<PathBuf> {
     let v1 = xdg_path_manager();
     let v2 = homelocalshare_path_manager();
 
-    if v1 == None { v2 } else { v1 }
+    if v1.is_none() { v2 } else { v1 }
 }
 
-pub fn prefix_manager() {}
+pub fn prefix_manager(file: &Path) -> Option<PathBuf> {
+    let top_dir = match top_manager() {
+        Some(x1) => x1,
+        None => {
+            return None;
+        }
+    };
+
+    let name = match file.file_stem() {
+        Some(x2) => x2,
+        None => {
+            return None;
+        }
+    };
+
+    let prefix_path: PathBuf = top_dir.join("wex").join("prefixes").join(name);
+
+    //returns
+    Some(prefix_path)
+}
