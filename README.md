@@ -1,16 +1,31 @@
-# WEX - (WINE EXECUTABLE)
+# wex  : WINE EXECUTABLE
 
-Software Purpose: Easy way to launch .exe files/games for new Linux Users who just switched from Windows without going through any hassle of configuration. 
-Plug And Play Easy to use for everyone, just one simple download.
+**Switched to Linux and can't open your `.exe`? wex is being built to fix that.**
 
-Status: Early Development(Started 2nd October)
+Click a Windows app or game and it runs, with no setup, no guides, and no
+hours lost to configuration.
 
-License : GPL3.0
+> **Status: early development** (started 2 October 2026). wex is not ready to
+> download yet. Follow along or help shape it.
 
-Goals : 
-1) Provide Ease Of Access to Newcomers in Linux without spending days of configuration.
-2) Honest Error Messages if something cannot run So that your time is not wasted fixing something.
-3) Provide regular updates and specific app configurations to smoothen user Experience.
+## The idea
+- **Zero setup:** each app gets its own Wine environment automatically.
+- **Honest errors:** if something can't run, wex tells you why, so you don't
+  waste an evening guessing.
+- **Built for newcomers:** a simple click-to-play interface is the goal,
+  especially for people (and kids) who have never touched a terminal.
+- **Better over time:** regular updates and per-app configurations for the
+  programs people actually use.
 
+## Where it is today(Last Updated on 3rd October 2026)
+- Core library in Rust: finds the data folder and works out each app's own
+  prefix location.
+- Next: creating prefixes, then launching apps through Wine, then a GUI.
+
+## Contributing
+Ideas and feedback are welcome. Open an issue and say hello.
+
+## License
+GPL-3.0
 
 
