@@ -1,4 +1,5 @@
 # wex  : WINE EXECUTABLE
+exe application launcher for linux
 
 **Switched to Linux and can't open your `.exe`? wex is being built to fix that.**
 
