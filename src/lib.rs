@@ -1,8 +1,11 @@
 use std::env;
 use std::ffi::OsString;
 //use std::fs;
+//use std::io::ErrorKind::NotFound;
+use std::io;
 use std::path::Path;
 use std::path::PathBuf;
+use std::process::{Command, ExitStatus};
 
 fn xdg_path_manager() -> Option<PathBuf> {
     let key: &str = "XDG_DATA_HOME";
@@ -70,4 +73,12 @@ pub fn prefix_manager(file: &Path) -> Option<PathBuf> {
 
     //returns
     Some(prefix_path)
+}
+
+pub fn init_prefix(prefix: &Path) -> io::Result<ExitStatus> {
+    Command::new("wine")
+        .arg("wineboot")
+        .arg("--init")
+        .env("WINEPREFIX", prefix)
+        .status()
 }
