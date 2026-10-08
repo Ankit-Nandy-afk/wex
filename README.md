@@ -18,10 +18,8 @@ hours lost to configuration.
 - **Better over time:** regular updates and per-app configurations for the
   programs people actually use.
 
-## Where it is today(Last Updated on 3rd October 2026)
-- Core library in Rust: finds the data folder and works out each app's own
-  prefix location.
-- Next: creating prefixes, then launching apps through Wine, then a GUI.
+## Where it is today(Last Updated on 8th October 2026)
+- Exit Status and edge cases testing
 
 ## Contributing
 Ideas and feedback are welcome. Open an issue and say hello.
