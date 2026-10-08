@@ -5,6 +5,8 @@ Wine:
 3) Invalid File(Bad Format) Gives status : 1
 4) A child killed by a signal has no normal exit code, which is why Rust's ExitStatus::code() returns an Option
 
+5) os error 2 comes when wine not found in os 
+
 Summary - Different failures  gives same status as 1
 
 
