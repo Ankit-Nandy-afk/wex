@@ -18,8 +18,9 @@ hours lost to configuration.
 - **Better over time:** regular updates and per-app configurations for the
   programs people actually use.
 
-## Where it is today(Last Updated on 8th October 2026)
-- Exit Status and edge cases testing
+## Where it is today(Last Updated on 10th October 2026)
+- Can now run .exe files while showing correct errors making it easier for users to know the fault (if occurs)
+-(TBD) hand writing steps to fix the fault 
 
 ## Contributing
 Ideas and feedback are welcome. Open an issue and say hello.
