@@ -1,35 +1,62 @@
+use std::env;
 use std::fs;
-use std::io::ErrorKind;
-use std::path::{Path, PathBuf};
+use std::io::{self, ErrorKind};
+use std::path::Path;
+use std::process::ExitCode;
 
-fn main() {
-    let path_assigned: &str = "Aything.exe";
-    let path_converted: &Path = Path::new(path_assigned);
+fn report_wine_error(reason: &io::Error) {
+    match reason.kind() {
+        ErrorKind::NotFound => eprintln!(
+            "Wine is not installed. Download it from https://www.winehq.org/download or install it with your package manager (apt, dnf, pacman)."
+        ),
+        ErrorKind::PermissionDenied => eprintln!(
+            "Wine was found, but your system won't let wex run it. Check that the wine file is executable and that you are allowed to use it."
+        ),
+        _ => eprintln!("Could not run wine: {}", reason),
+    }
+}
 
-    let store_prefix: Option<PathBuf> = wex::prefix_manager(path_converted);
+fn main() -> ExitCode {
+    let Some(exe_arg) = env::args_os().nth(1) else {
+        eprintln!("Usage: wex <file.exe>");
+        eprintln!("Example: wex setup.exe");
+        return ExitCode::FAILURE;
+    };
 
-    match store_prefix {
-        Some(path) => match fs::create_dir_all(&path) {
-            Ok(()) => {
-                println!("Folder ready: {}", path.display());
+    let Some(prefix) = wex::prefix_manager(Path::new(&exe_arg)) else {
+        eprintln!("Could not work out where to store the prefix (is HOME set?)");
+        return ExitCode::FAILURE;
+    };
 
-                match wex::init_prefix(&path) {
-                    Ok(status) => println!("wineboot finished, success: {}", status.success()),
-                    Err(reason) => {
-                        match reason.kind() {
-                            ErrorKind::NotFound => println!(
-                                "Wine is not installed. Download it from https://www.winehq.org/download or install it with your package manager (apt, dnf, pacman)."
-                            ),
-                            ErrorKind::PermissionDenied => println!(
-                                "Wine was found, but your system won't let wex run it. Check that the wine file is executable and that you are allowed to use it."
-                            ), //everything else here _ i can forget the meaninng
-                            _ => println!("Could not run wine: {}", reason),
-                        }
-                    }
-                }
+    if let Err(reason) = fs::create_dir_all(&prefix) {
+        eprintln!("Could not create folder {}: {}", prefix.display(), reason);
+        return ExitCode::FAILURE;
+    }
+    println!("Folder ready: {}", prefix.display());
+
+    if !prefix.join("system.reg").exists() {
+        match wex::init_prefix(&prefix) {
+            Ok(status) if status.success() => println!("wineboot finished successfully"),
+            Ok(status) => {
+                eprintln!("wineboot failed: {status}");
+                return ExitCode::FAILURE;
             }
-            Err(reason) => println!("Could not create folder: {}", reason),
-        },
-        None => println!("No prefix path was produced"),
+            Err(reason) => {
+                report_wine_error(&reason);
+                return ExitCode::FAILURE;
+            }
+        }
+    }
+
+    match wex::run_exe(&prefix, Path::new(&exe_arg)) {
+        Ok(status) if status.success() => ExitCode::SUCCESS,
+        Ok(status) => {
+            eprintln!("exe exited with: {status}");
+            ExitCode::FAILURE
+        }
+        Err(reason) => {
+            report_wine_error(&reason);
+            ExitCode::FAILURE
+        }
     }
 }
